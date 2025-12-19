@@ -1,25 +1,33 @@
-import { useState, useRef, type ComponentType, type KeyboardEvent } from "react";
+import { useState, useRef, type ComponentType, type KeyboardEvent, type MouseEvent } from "react";
 
-// withFocusableCell
 export default function FocusableCell<P extends object>(BaseComponent: ComponentType<P>) {
 
-  // need to handle onClick as well
   return function(props:P) {
     const [isCellFocused, setIsCellFocused] = useState(false);
     const cellRef = useRef<HTMLDivElement>(null);
     const elementRef = useRef<HTMLDivElement>(null);
 
+    const clickOnElement = () => {
+      if (elementRef.current) { 
+        elementRef.current.click();
+      }
+    }
+
     const keyPressListener = (event:KeyboardEvent<HTMLDivElement>) => {
       if (event.key === 'Enter') {
         event.preventDefault();
         event.stopPropagation();
-        if (elementRef.current) { 
-          elementRef.current.click();
-        }
+        // Tried dispatching an Enter key event but that didn't work.
+        // I don't think browsers or React respond to synthetic key events
+        clickOnElement();
       }
     }
 
-    // TODO - handle onClick for the button
+    const handleClick = (event:MouseEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      clickOnElement();
+    }
 
     return (
       <>
@@ -30,7 +38,7 @@ export default function FocusableCell<P extends object>(BaseComponent: Component
           tabIndex={0} 
           onFocus={() => setIsCellFocused(true)} 
           onBlur={() => setIsCellFocused(false)}
-          onClick={() => console.log("clicked on cell")}
+          onClick={handleClick}
           >
         </div>
         <BaseComponent {...props} ref={elementRef} />
