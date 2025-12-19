@@ -18,7 +18,7 @@ export default function FocusableCell<P extends object>(BaseComponent: Component
     Given that the Button is wrapped in the PopoverTrigger, I'm not sure there's a simple way around this.
     */
     const keyPressListener = (event:KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' || event.code === 'Space') {
         event.preventDefault();
         event.stopPropagation();
         // Tried dispatching an Enter key event but that didn't work.
