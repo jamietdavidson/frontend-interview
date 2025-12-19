@@ -12,11 +12,11 @@ export function PopperTableCell({
   triggerText = "View",
 }: PopperTableCellProps) {
 
-  const NewCell = FocusableCell(ButtonPopover)
+  const FocusableButtonPopover = FocusableCell(ButtonPopover)
 
   return (
     <TableCell>
-      <NewCell value={value} triggerText={triggerText} />
+      <FocusableButtonPopover value={value} triggerText={triggerText} />
     </TableCell>
   )
 }
