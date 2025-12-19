@@ -1,37 +1,40 @@
-import { useState, useEffect, useRef, ReactNode } from "react";
+import { useState, useRef, type ComponentType, type KeyboardEvent } from "react";
 
-export default function FocusableCell(props: { children: ReactNode }) {
-const [isCellFocused, setIsCellFocused] = useState(false);
-  const cellRef = useRef(null);
-  const elementRef = useRef<HTMLElement>(null);
-  // useEffect(() => {
-  //   if (isCellFocused) {
-  //     elementRef.current?.focus();
-  //   }
-  // }, [isCellFocused])
+// withFocusableCell
+export default function FocusableCell<P extends object>(BaseComponent: ComponentType<P>) {
 
-  /*
-  const keyPressListener = (event) => {
-    // event.stopPropagation();
-    console.log("On Key press")
-    console.log("Current Target: ", event.currentTarget);
-    console.log("Target: ", event.target);
-    console.log("-----")
-    if (event.key === 'Enter') {
-      buttonRef.current?.focus();
+  // need to handle onClick as well
+  return function(props:P) {
+    const [isCellFocused, setIsCellFocused] = useState(false);
+    const cellRef = useRef<HTMLDivElement>(null);
+    const elementRef = useRef<HTMLDivElement>(null);
+
+    const keyPressListener = (event:KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+        if (elementRef.current) { 
+          elementRef.current.click();
+        }
+      }
     }
-  }
-    */
 
-  return (
-    <>
-      <div ref={cellRef} className="z-50 absolute top-0 left-0 w-full h-full" tabIndex={0} 
-        onFocus={() => setIsCellFocused(true)} 
-        onBlur={() => setIsCellFocused(false)}>
-      </div>
-      <div ref={elementRef}>
-        {props.children}
-      </div>
-    </>
-  )
-}
+    // TODO - handle onClick for the button
+
+    return (
+      <>
+        <div 
+          ref={cellRef} 
+          onKeyDown={keyPressListener} 
+          className="z-50 absolute top-0 left-0 w-full h-full bg-blue/500 cursor-pointer" 
+          tabIndex={0} 
+          onFocus={() => setIsCellFocused(true)} 
+          onBlur={() => setIsCellFocused(false)}
+          onClick={() => console.log("clicked on cell")}
+          >
+        </div>
+        <BaseComponent {...props} ref={elementRef} />
+      </>
+    )
+  }
+} 

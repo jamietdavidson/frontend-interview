@@ -78,7 +78,6 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
 }
 
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
-  const { children, ...restOfProps} = props;
   return (
     <td
       data-slot="table-cell"
@@ -86,12 +85,8 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
         "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] relative",
         className
       )}
-      {...restOfProps}
-    >
-      <FocusableCell>
-        {children}
-      </FocusableCell>
-    </td>
+      {...props}
+    />
   )
 }
 
