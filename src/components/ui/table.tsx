@@ -1,5 +1,4 @@
 import * as React from "react"
-import FocusableCell from "@/components/table/FocusableCell";
 
 import { cn } from "@/lib/utils"
 
