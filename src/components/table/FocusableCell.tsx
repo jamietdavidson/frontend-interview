@@ -1,9 +1,8 @@
-import { useState, useRef, type ComponentType, type KeyboardEvent, type MouseEvent } from "react";
+import { useRef, type ComponentType, type KeyboardEvent, type MouseEvent } from "react";
 
 export default function FocusableCell<P extends object>(BaseComponent: ComponentType<P>) {
 
   return function(props:P) {
-    const [isCellFocused, setIsCellFocused] = useState(false);
     const cellRef = useRef<HTMLDivElement>(null);
     const elementRef = useRef<HTMLDivElement>(null);
 
@@ -48,8 +47,6 @@ export default function FocusableCell<P extends object>(BaseComponent: Component
           onKeyDown={keyPressListener} 
           className="z-50 absolute top-0 left-0 w-full h-full cursor-pointer" 
           tabIndex={0} 
-          onFocus={() => setIsCellFocused(true)} 
-          onBlur={() => setIsCellFocused(false)}
           onClick={handleClick}
           >
         </div>
