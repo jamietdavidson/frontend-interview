@@ -15,10 +15,16 @@ export function TextTableCell({
   rowIndex,
   colIndex,
 }: TextTableCellProps) {
-  const { setFocusedCell } = useCellNavigation()
+  const { setFocusedCell, isEditing, setIsEditing } = useCellNavigation()
 
   const handleClick = () => {
-    setFocusedCell({ rowIndex, colIndex })
+    if (isFocused && !isEditing) {
+      // Second click: enter edit mode
+      setIsEditing(true)
+    } else if (!isFocused) {
+      // First click: select the cell
+      setFocusedCell({ rowIndex, colIndex })
+    }
   }
 
   return (
@@ -26,7 +32,8 @@ export function TextTableCell({
       onClick={handleClick}
       className={cn(
         "cursor-pointer",
-        isFocused && "outline outline-2 outline-blue-500"
+        isFocused && !isEditing && "outline outline-2 outline-blue-500",
+        isFocused && isEditing && "outline outline-2 outline-green-500"
       )}
     >
       <div className="max-w-[200px] truncate" title={value}>

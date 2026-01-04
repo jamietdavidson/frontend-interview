@@ -21,5 +21,7 @@ export interface CellPosition {
 export interface CellNavigationContextValue {
   focusedCell: CellPosition | null
   setFocusedCell: (position: CellPosition | null) => void
+  isEditing: boolean
+  setIsEditing: (editing: boolean) => void
 }
 

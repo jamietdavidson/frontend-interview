@@ -21,11 +21,29 @@ interface DataTableProps {
 
 export function DataTable({ columns, data }: DataTableProps) {
   const [focusedCell, setFocusedCell] = useState<CellPosition | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
   const tableRef = useRef<HTMLTableElement>(null)
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (!focusedCell) return
+
+      // Handle Enter to toggle edit mode
+      if (e.key === "Enter" && !isEditing) {
+        e.preventDefault()
+        setIsEditing(true)
+        return
+      }
+
+      // Handle Escape to exit edit mode
+      if (e.key === "Escape" && isEditing) {
+        e.preventDefault()
+        setIsEditing(false)
+        return
+      }
+
+      // Don't allow navigation when in edit mode
+      if (isEditing) return
 
       const { rowIndex, colIndex } = focusedCell
       let newRow = rowIndex
@@ -76,7 +94,16 @@ export function DataTable({ columns, data }: DataTableProps) {
         setFocusedCell({ rowIndex: newRow, colIndex: newCol })
       }
     },
-    [focusedCell, data.length, columns.length]
+    [focusedCell, isEditing, data.length, columns.length]
+  )
+
+  // Reset edit mode when changing cells
+  const handleSetFocusedCell = useCallback(
+    (position: CellPosition | null) => {
+      setFocusedCell(position)
+      setIsEditing(false)
+    },
+    []
   )
 
   // Focus the table when a cell is focused so keyboard events work
@@ -129,7 +156,14 @@ export function DataTable({ columns, data }: DataTableProps) {
   }
 
   return (
-    <CellNavigationContext.Provider value={{ focusedCell, setFocusedCell }}>
+    <CellNavigationContext.Provider
+        value={{
+          focusedCell,
+          setFocusedCell: handleSetFocusedCell,
+          isEditing,
+          setIsEditing,
+        }}
+      >
       <Table
         ref={tableRef}
         tabIndex={0}

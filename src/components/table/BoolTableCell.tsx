@@ -15,10 +15,14 @@ export function BoolTableCell({
   rowIndex,
   colIndex,
 }: BoolTableCellProps) {
-  const { setFocusedCell } = useCellNavigation()
+  const { setFocusedCell, isEditing, setIsEditing } = useCellNavigation()
 
   const handleClick = () => {
-    setFocusedCell({ rowIndex, colIndex })
+    if (isFocused && !isEditing) {
+      setIsEditing(true)
+    } else if (!isFocused) {
+      setFocusedCell({ rowIndex, colIndex })
+    }
   }
 
   return (
@@ -26,7 +30,8 @@ export function BoolTableCell({
       onClick={handleClick}
       className={cn(
         "cursor-pointer",
-        isFocused && "outline outline-2 outline-blue-500"
+        isFocused && !isEditing && "outline outline-2 outline-blue-500",
+        isFocused && isEditing && "outline outline-2 outline-green-500"
       )}
     >
       <div className="flex items-center justify-center">

@@ -17,7 +17,7 @@ export function NumberTableCell({
   rowIndex,
   colIndex,
 }: NumberTableCellProps) {
-  const { setFocusedCell } = useCellNavigation()
+  const { setFocusedCell, isEditing, setIsEditing } = useCellNavigation()
 
   const formatValue = () => {
     switch (format) {
@@ -37,7 +37,11 @@ export function NumberTableCell({
   }
 
   const handleClick = () => {
-    setFocusedCell({ rowIndex, colIndex })
+    if (isFocused && !isEditing) {
+      setIsEditing(true)
+    } else if (!isFocused) {
+      setFocusedCell({ rowIndex, colIndex })
+    }
   }
 
   return (
@@ -45,7 +49,8 @@ export function NumberTableCell({
       onClick={handleClick}
       className={cn(
         "cursor-pointer",
-        isFocused && "outline outline-2 outline-blue-500"
+        isFocused && !isEditing && "outline outline-2 outline-blue-500",
+        isFocused && isEditing && "outline outline-2 outline-green-500"
       )}
     >
       <div className="text-right font-mono">{formatValue()}</div>

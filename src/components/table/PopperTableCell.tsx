@@ -25,18 +25,28 @@ export function PopperTableCell({
   colIndex,
 }: PopperTableCellProps) {
   const [open, setOpen] = useState(false)
-  const { setFocusedCell } = useCellNavigation()
+  const { setFocusedCell, isEditing, setIsEditing } = useCellNavigation()
 
-  const handleClick = () => {
-    setFocusedCell({ rowIndex, colIndex })
+  const handleCellClick = (e: React.MouseEvent) => {
+    // Prevent the cell click from triggering when clicking the button
+    if ((e.target as HTMLElement).closest("button")) {
+      return
+    }
+
+    if (isFocused && !isEditing) {
+      setIsEditing(true)
+    } else if (!isFocused) {
+      setFocusedCell({ rowIndex, colIndex })
+    }
   }
 
   return (
     <TableCell
-      onClick={handleClick}
+      onClick={handleCellClick}
       className={cn(
         "cursor-pointer",
-        isFocused && "outline outline-2 outline-blue-500"
+        isFocused && !isEditing && "outline outline-2 outline-blue-500",
+        isFocused && isEditing && "outline outline-2 outline-green-500"
       )}
     >
       <Popover open={open} onOpenChange={setOpen}>
