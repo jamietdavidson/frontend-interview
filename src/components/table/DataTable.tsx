@@ -12,7 +12,7 @@ import { TextTableCell } from "./TextTableCell"
 import { NumberTableCell } from "./NumberTableCell"
 import { PopperTableCell } from "./PopperTableCell"
 import { CellNavigationContext } from "./CellNavigationContext"
-import type { ColumnDefinition, TableData, CellPosition } from "./types"
+import type { ColumnDefinition, ColumnType, TableData, CellPosition } from "./types"
 
 interface DataTableProps {
   columns: ColumnDefinition[]
@@ -24,15 +24,30 @@ export function DataTable({ columns, data }: DataTableProps) {
   const [isEditing, setIsEditing] = useState(false)
   const tableRef = useRef<HTMLTableElement>(null)
 
+  // Get the type of the currently focused cell
+  const focusedCellType: ColumnType | null = focusedCell
+    ? columns[focusedCell.colIndex]?.type ?? null
+    : null
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (!focusedCell) return
 
-      // Handle Enter to toggle edit mode
+      // Handle Enter to toggle edit mode (works for all cell types)
       if (e.key === "Enter" && !isEditing) {
         e.preventDefault()
         setIsEditing(true)
         return
+      }
+
+      // For popper cells in edit mode, delegate to the cell's handler
+      if (focusedCellType === "popper" && isEditing) {
+        const handler = (window as any).__popperCellHandler
+        console.log("Popper cell in edit mode, handler:", handler, "key:", e.key)
+        if (handler && handler(e.key)) {
+          e.preventDefault()
+          return
+        }
       }
 
       // Handle Escape to exit edit mode
@@ -94,7 +109,7 @@ export function DataTable({ columns, data }: DataTableProps) {
         setFocusedCell({ rowIndex: newRow, colIndex: newCol })
       }
     },
-    [focusedCell, isEditing, data.length, columns.length]
+    [focusedCell, focusedCellType, isEditing, data.length, columns.length]
   )
 
   // Reset edit mode when changing cells
@@ -162,6 +177,7 @@ export function DataTable({ columns, data }: DataTableProps) {
           setFocusedCell: handleSetFocusedCell,
           isEditing,
           setIsEditing,
+          focusedCellType,
         }}
       >
       <Table
