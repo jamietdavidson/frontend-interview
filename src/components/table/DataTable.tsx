@@ -323,7 +323,17 @@ export function DataTable({ columns, data: initialData }: DataTableProps) {
   }, []);
 
   return (
-    <Table onClick={handleTableClick}>
+    <Table
+      onClick={handleTableClick}
+      onFocus={() => {
+        setTableSelected(true);
+        if (!currentId) {
+          setCurrentId(setCellParamaters({ column: 0, row: 0 }));
+        }
+      }}
+      tabIndex={0}
+      className="focus:outline-none"
+    >
       <TableHeader>
         <TableRow>
           {columns.map((column) => (
