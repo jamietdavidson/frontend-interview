@@ -1,16 +1,15 @@
-import { TableCell } from "@/components/ui/table"
+import { TableCell } from "@/components/ui/table";
 
-interface TextTableCellProps {
-  value: string
+interface TextTableCellProps extends React.ComponentProps<typeof TableCell> {
+  value: string;
 }
 
-export function TextTableCell({ value }: TextTableCellProps) {
+export function TextTableCell({ value, ...cellProps }: TextTableCellProps) {
   return (
-    <TableCell>
+    <TableCell {...cellProps}>
       <div className="max-w-[200px] truncate" title={value}>
         {value}
       </div>
     </TableCell>
-  )
+  );
 }
-

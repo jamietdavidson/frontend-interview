@@ -1,12 +1,12 @@
-import { TableCell } from "@/components/ui/table"
+import { TableCell } from "@/components/ui/table";
 
-interface BoolTableCellProps {
-  value: boolean
+interface BoolTableCellProps extends React.ComponentProps<typeof TableCell> {
+  value: boolean;
 }
 
-export function BoolTableCell({ value }: BoolTableCellProps) {
+export function BoolTableCell({ value, ...cellProps }: BoolTableCellProps) {
   return (
-    <TableCell>
+    <TableCell {...cellProps}>
       <div className="flex items-center justify-center">
         <span
           className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
@@ -19,6 +19,5 @@ export function BoolTableCell({ value }: BoolTableCellProps) {
         </span>
       </div>
     </TableCell>
-  )
+  );
 }
-
