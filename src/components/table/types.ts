@@ -13,3 +13,16 @@ export interface TableData {
   [key: string]: any
 }
 
+export interface CellPosition {
+  rowIndex: number
+  colIndex: number
+}
+
+export interface CellNavigationContextValue {
+  focusedCell: CellPosition | null
+  setFocusedCell: (position: CellPosition | null) => void
+  isEditing: boolean
+  setIsEditing: (editing: boolean) => void
+  focusedCellType: ColumnType | null
+}
+

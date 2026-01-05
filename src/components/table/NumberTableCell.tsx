@@ -1,11 +1,24 @@
 import { TableCell } from "@/components/ui/table"
+import { useCellNavigation } from "./CellNavigationContext"
+import { cn } from "@/lib/utils"
 
 interface NumberTableCellProps {
   value: number
   format?: "currency" | "percentage" | "decimal"
+  isFocused: boolean
+  rowIndex: number
+  colIndex: number
 }
 
-export function NumberTableCell({ value, format }: NumberTableCellProps) {
+export function NumberTableCell({
+  value,
+  format,
+  isFocused,
+  rowIndex,
+  colIndex,
+}: NumberTableCellProps) {
+  const { setFocusedCell, isEditing, setIsEditing } = useCellNavigation()
+
   const formatValue = () => {
     switch (format) {
       case "currency":
@@ -23,8 +36,23 @@ export function NumberTableCell({ value, format }: NumberTableCellProps) {
     }
   }
 
+  const handleClick = () => {
+    if (isFocused && !isEditing) {
+      setIsEditing(true)
+    } else if (!isFocused) {
+      setFocusedCell({ rowIndex, colIndex })
+    }
+  }
+
   return (
-    <TableCell>
+    <TableCell
+      onClick={handleClick}
+      className={cn(
+        "cursor-pointer",
+        isFocused && !isEditing && "outline outline-2 outline-blue-500",
+        isFocused && isEditing && "outline outline-2 outline-green-500"
+      )}
+    >
       <div className="text-right font-mono">{formatValue()}</div>
     </TableCell>
   )
