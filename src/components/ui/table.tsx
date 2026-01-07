@@ -77,7 +77,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
 }
 
 interface TableCellProps extends React.ComponentProps<"td"> {
-  onEdit?: () => void
+  onEdit?: (triggeredByEnter?: boolean) => void
   'data-editing'?: boolean
 }
 
@@ -87,7 +87,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
       // Handle Enter key to enter edit mode - only if overlay is focused
       if (e.key === 'Enter' && onEdit && document.activeElement === e.currentTarget) {
         e.preventDefault()
-        onEdit()
+        onEdit(true) // triggered by Enter
         return
       }
 
@@ -148,8 +148,8 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
       // Only trigger edit if clicking on the overlay AND it's already focused
       if (overlay.classList.contains('cell-overlay')) {
         if (document.activeElement === overlay && onEdit) {
-          // Already focused - enter edit mode
-          onEdit()
+          // Already focused - enter edit mode (triggered by click)
+          onEdit(false) // triggered by click
         } else {
           // Not focused - just focus the overlay
           overlay.focus()
