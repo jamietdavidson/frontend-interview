@@ -84,8 +84,8 @@ interface TableCellProps extends React.ComponentProps<"td"> {
 const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
   ({ className, children, onEdit, ...props }, ref) => {
     const handleKeyDown = (e: React.KeyboardEvent) => {
-      // Handle Enter key to enter edit mode
-      if (e.key === 'Enter' && onEdit) {
+      // Handle Enter key to enter edit mode - only if overlay is focused
+      if (e.key === 'Enter' && onEdit && document.activeElement === e.currentTarget) {
         e.preventDefault()
         onEdit()
         return
@@ -144,9 +144,16 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
     }
 
     const handleClick = (e: React.MouseEvent) => {
-      // Only trigger edit if clicking on the overlay
-      if ((e.target as HTMLElement).classList.contains('cell-overlay') && onEdit) {
-        onEdit()
+      const overlay = e.target as HTMLElement
+      // Only trigger edit if clicking on the overlay AND it's already focused
+      if (overlay.classList.contains('cell-overlay')) {
+        if (document.activeElement === overlay && onEdit) {
+          // Already focused - enter edit mode
+          onEdit()
+        } else {
+          // Not focused - just focus the overlay
+          overlay.focus()
+        }
       }
     }
 
