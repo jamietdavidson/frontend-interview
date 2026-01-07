@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useMemo } from "react"
 import { TableCell } from "@/components/ui/table"
 import {
   Popover,
@@ -6,6 +6,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
+import { columns, generateData } from "@/data/generateData"
+import { DataTable } from "./DataTable"
 
 interface PopperTableCellProps {
   value: string
@@ -16,6 +18,7 @@ export function PopperTableCell({
   value,
   triggerText = "View",
 }: PopperTableCellProps) {
+  const data = useMemo(() => generateData(100), [])
   const [open, setOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editTriggeredByEnter, setEditTriggeredByEnter] = useState(false)
@@ -106,12 +109,7 @@ export function PopperTableCell({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80">
-          <div className="space-y-2">
-            <h4 className="font-medium leading-none">Details</h4>
-            <p className="text-sm text-muted-foreground break-words">
-              {value}
-            </p>
-          </div>
+          <DataTable columns={columns.filter(col => ['id', 'active', 'description'].includes(col.key))} data={data} />
         </PopoverContent>
       </Popover>
     </TableCell>
