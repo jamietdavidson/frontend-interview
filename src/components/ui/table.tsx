@@ -76,79 +76,107 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   )
 }
 
-function TableCell({ className, children, ...props }: React.ComponentProps<"td">) {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    const currentCell = e.currentTarget.closest('td') as HTMLTableCellElement
-    if (!currentCell) return
+interface TableCellProps extends React.ComponentProps<"td"> {
+  onEdit?: () => void
+  'data-editing'?: boolean
+}
 
-    const row = currentCell.closest('tr') as HTMLTableRowElement
-    const table = currentCell.closest('table') as HTMLTableElement
-    if (!row || !table) return
-
-    const cells = Array.from(row.cells)
-    const rows = Array.from(table.querySelectorAll('tbody tr'))
-    
-    const currentColIndex = cells.indexOf(currentCell)
-    const currentRowIndex = rows.indexOf(row)
-
-    let targetCell: HTMLTableCellElement | null = null
-
-    switch (e.key) {
-      case 'ArrowUp':
+const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
+  ({ className, children, onEdit, ...props }, ref) => {
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      // Handle Enter key to enter edit mode
+      if (e.key === 'Enter' && onEdit) {
         e.preventDefault()
-        if (currentRowIndex > 0) {
-          const targetRow = rows[currentRowIndex - 1]
-          targetCell = targetRow.cells[currentColIndex]
-        }
-        break
-      case 'ArrowDown':
-        e.preventDefault()
-        if (currentRowIndex < rows.length - 1) {
-          const targetRow = rows[currentRowIndex + 1]
-          targetCell = targetRow.cells[currentColIndex]
-        }
-        break
-      case 'ArrowLeft':
-        e.preventDefault()
-        if (currentColIndex > 0) {
-          targetCell = cells[currentColIndex - 1]
-        }
-        break
-      case 'ArrowRight':
-        // Tab or ArrowRight - go right
-        if (currentColIndex < cells.length - 1) {
-          targetCell = cells[currentColIndex + 1]
-        }
-        break
-    }
+        onEdit()
+        return
+      }
 
-    if (targetCell) {
-      const overlay = targetCell.querySelector('[tabindex="0"]') as HTMLElement
-      if (overlay) {
-        overlay.focus()
+      const currentCell = e.currentTarget.closest('td') as HTMLTableCellElement
+      if (!currentCell) return
+
+      const row = currentCell.closest('tr') as HTMLTableRowElement
+      const table = currentCell.closest('table') as HTMLTableElement
+      if (!row || !table) return
+
+      const cells = Array.from(row.cells)
+      const rows = Array.from(table.querySelectorAll('tbody tr')) as HTMLTableRowElement[]
+      
+      const currentColIndex = cells.indexOf(currentCell)
+      const currentRowIndex = rows.indexOf(row)
+
+      let targetCell: HTMLTableCellElement | null = null
+
+      switch (e.key) {
+        case 'ArrowUp':
+          e.preventDefault()
+          if (currentRowIndex > 0) {
+            const targetRow = rows[currentRowIndex - 1]
+            targetCell = targetRow.cells[currentColIndex]
+          }
+          break
+        case 'ArrowDown':
+          e.preventDefault()
+          if (currentRowIndex < rows.length - 1) {
+            const targetRow = rows[currentRowIndex + 1]
+            targetCell = targetRow.cells[currentColIndex]
+          }
+          break
+        case 'ArrowLeft':
+          e.preventDefault()
+          if (currentColIndex > 0) {
+            targetCell = cells[currentColIndex - 1]
+          }
+          break
+        case 'ArrowRight':
+          e.preventDefault()
+          if (currentColIndex < cells.length - 1) {
+            targetCell = cells[currentColIndex + 1]
+          }
+          break
+      }
+
+      if (targetCell) {
+        const overlay = targetCell.querySelector('[tabindex="0"]') as HTMLElement
+        if (overlay) {
+          overlay.focus()
+        }
       }
     }
-  }
 
-  return (
-    <td
-      data-slot="table-cell"
-      className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] relative",
-        className
-      )}
-      {...props}
-    >
-      {children}
-      {/* Focusable overlay */}
-      <div
-        className="absolute inset-0 border-2 border-transparent focus:border-blue-500 focus:outline-none z-10"
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-      />
-    </td>
-  )
-}
+    const handleClick = (e: React.MouseEvent) => {
+      // Only trigger edit if clicking on the overlay
+      if ((e.target as HTMLElement).classList.contains('cell-overlay') && onEdit) {
+        onEdit()
+      }
+    }
+
+    return (
+      <td
+        ref={ref}
+        data-slot="table-cell"
+        className={cn(
+          "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px] relative",
+          className
+        )}
+        {...props}
+      >
+        {children}
+        {/* Focusable overlay - hidden when editing */}
+        <div
+          className={cn(
+            "cell-overlay absolute inset-0 border-2 border-transparent focus:border-blue-500 focus:outline-none z-10",
+            props['data-editing'] && "hidden"
+          )}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
+          onClick={handleClick}
+        />
+      </td>
+    )
+  }
+)
+
+TableCell.displayName = "TableCell"
 
 function TableCaption({
   className,
