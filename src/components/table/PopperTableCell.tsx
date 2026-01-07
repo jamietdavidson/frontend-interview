@@ -22,7 +22,7 @@ export function PopperTableCell({
     <TableCell>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" tabIndex={-1}>
             {triggerText}
           </Button>
         </PopoverTrigger>
