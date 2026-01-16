@@ -22,4 +22,4 @@ You are encouraged to use AI in your solution, and refactor code as neccesary - 
 
 If you've worked with keyboard events before, this should take a couple of hours. If not, it may take longer. Please don't spend longer than 2 hours on it, and submit your progress around that point. Do so by opening up a PR, or by forking it and emailing me the link.
 
-Feel free to email me with any questions you might have - james@solo.one.
+Feel free to email me with any questions you might have - james.davidson@solo.one.
