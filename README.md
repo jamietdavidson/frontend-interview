@@ -18,6 +18,8 @@ Bonus points if you switch out the contents of the popper to something that has 
 
 You are encouraged to use AI in your solution, and refactor code as neccesary - what you start with will not look like the final solution.
 
+The popper logic should respond to external focus events. Ie, if an element is programmatically focused outside of the popper context, it should close the popper.
+
 # Duration
 
 If you've worked with keyboard events before, this should take a couple of hours. If not, it may take longer. Please don't spend longer than 2 hours on it, and submit your progress around that point. Do so by opening up a PR, or by forking it and emailing me the link.
