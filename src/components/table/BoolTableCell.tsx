@@ -1,13 +1,13 @@
-import { TableCell } from "@/components/ui/table"
+import { TableCell } from "@/components/ui/table";
 
 interface BoolTableCellProps {
-  value: boolean
+  value: boolean;
 }
 
 export function BoolTableCell({ value }: BoolTableCellProps) {
   return (
     <TableCell>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-start">
         <span
           className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
             value
@@ -19,6 +19,5 @@ export function BoolTableCell({ value }: BoolTableCellProps) {
         </span>
       </div>
     </TableCell>
-  )
+  );
 }
-

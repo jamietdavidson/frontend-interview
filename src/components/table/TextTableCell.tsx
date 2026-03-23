@@ -1,7 +1,7 @@
-import { TableCell } from "@/components/ui/table"
+import { TableCell } from "@/components/ui/table";
 
 interface TextTableCellProps {
-  value: string
+  value: string;
 }
 
 export function TextTableCell({ value }: TextTableCellProps) {
@@ -11,6 +11,5 @@ export function TextTableCell({ value }: TextTableCellProps) {
         {value}
       </div>
     </TableCell>
-  )
+  );
 }
-

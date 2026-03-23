@@ -122,3 +122,33 @@
     min-height: 100vh;
   }
 }
+
+td[data-cell-state="selected"] {
+  @apply ring-2 ring-primary/70 ring-inset;
+}
+
+td[data-cell-state="editing"] {
+  @apply ring-2 ring-blue-500 ring-inset;
+}
+
+td[data-cell-state="selected"] .cell-content {
+  pointer-events: none;
+}
+
+td[data-cell-state="editing"] .cell-content {
+  pointer-events: auto;
+}
+
+.cell-number-editor {
+  appearance: textfield;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.cell-number-editor::-webkit-outer-spin-button,
+.cell-number-editor::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
