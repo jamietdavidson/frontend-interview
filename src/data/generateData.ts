@@ -1,4 +1,8 @@
-import type { ColumnDefinition, TableData } from "@/components/table/types"
+import {
+  POPPER_NESTED_DEFAULTS,
+  type ColumnDefinition,
+  type TableData,
+} from "@/components/table/types"
 
 // Sample data generators
 const names = [
@@ -64,7 +68,10 @@ export function generateData(count: number = 100): TableData[] {
       salary: randomFloat(50000, 200000),
       active: Math.random() > 0.3,
       score: randomFloat(0, 100),
-      description: `${randomElement(descriptions)}. ID: ${i + 1}. This is a detailed description that contains more information about the person and their role in the organization.`,
+      description: {
+        details: `${randomElement(descriptions)}. ID: ${i + 1}. This is a detailed description that contains more information about the person and their role in the organization.`,
+        ...POPPER_NESTED_DEFAULTS,
+      },
     })
   }
 

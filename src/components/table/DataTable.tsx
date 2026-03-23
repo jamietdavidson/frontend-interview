@@ -11,7 +11,7 @@ import { BoolTableCell } from "./BoolTableCell";
 import { TextTableCell } from "./TextTableCell";
 import { NumberTableCell } from "./NumberTableCell";
 import { PopperTableCell } from "./PopperTableCell";
-import type { ColumnDefinition, TableData } from "./types";
+import type { ColumnDefinition, PopperColumnValue, TableData } from "./types";
 
 interface DataTableProps {
   columns: ColumnDefinition[];
@@ -375,7 +375,7 @@ export function DataTable({ columns, data }: DataTableProps) {
                   <div className="cell-content w-full min-w-0">
                     {column.type === "popper" ? (
                       <PopperTableCell
-                        value={value as string}
+                        value={value as PopperColumnValue}
                         triggerText={column.triggerText}
                         isEditing={isEditing}
                         onChange={(nextValue) =>
