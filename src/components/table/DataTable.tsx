@@ -438,7 +438,7 @@ export function DataTable({ columns, data }: DataTableProps) {
                   </div>
                   {uneditableTooltipCell === cellKey ? (
                     <div className="pointer-events-none absolute -top-1 left-1/2 z-100 -translate-x-1/2 -translate-y-full rounded-md bg-foreground px-2 py-1 text-xs text-background shadow">
-                      Cell uneditable
+                      Uneditable
                     </div>
                   ) : null}
                 </TableCell>
